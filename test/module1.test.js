@@ -2,6 +2,16 @@ describe('Module 01 - SVG Library', () => {
   const svgelement = ast.findClass('SVGElement');
   const symbol = ast.findClass('Symbol');
   const sight = ast.findClass('Sight');
+  const svgelement_constructor = (svgelement.length) ? svgelement.findMethod('constructor') : [];
+  const sight_constructor = (sight.length) ? svgelement.findMethod('constructor') : [];
+  const svgelement_constructor_assignments = (svgelement_constructor.length) ? svgelement_constructor.findAssignments() : [];
+
+  const attr = (svgelement.length) ? svgelement.findMethod('attr') : [];
+  const for_of = (attr.length) ? attr.findForOf() : [];
+
+  const append = (svgelement.length) ? svgelement.findMethod('append') : [];
+
+  const draw = (sight.length) ? sight.findMethod('draw') : [];
 
   it('Should have a `SVGElement` class. @svgelement-class', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
@@ -9,24 +19,23 @@ describe('Module 01 - SVG Library', () => {
 
   it('`SVGElement` class should have a `constructor`. @svgelement-constructor', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
-
-    const svgelement_constructor = svgelement.findMethod('constructor');
     assert(svgelement_constructor.length, 'Does the `SVGElement` class have a `constructor`?');
     const params = svgelement_constructor.findParams();
     assert(params.length != 0 && params[0].name == 'type', 'Does the `SVGElement` class `constructor` have a parameter of `type`?');
 
-    const constructor_assignments = svgelement_constructor.findAssignments();
-    const type = constructor_assignments.classVariable('type');
+    assert(svgelement_constructor_assignments.length, 'Do you have an `SVGElement` class constructor?');
+    const type = svgelement_constructor_assignments.classVariable('type');
     const type_right = type.length ? type.get().parent.value.right.name : false;
     assert(type_right == 'type', 'Have you set `this.type` equal to `type`?');
 
-    const namespace = constructor_assignments.classVariable('namespace');
+    const namespace = svgelement_constructor_assignments.classVariable('namespace');
     const namespace_right = namespace.length ? namespace.get().parent.value.right.value : false;
     assert(namespace_right == 'http://www.w3.org/2000/svg', 'Have you set `this.namespace` equal to `http://www.w3.org/2000/svg`?');
   });
 
   it('`SVGElement` class should create an NS element. @svgelement-constructor-createnselement', () => {
-    const node = constructor_assignments.classVariable('node').at(0);
+    assert(svgelement_constructor_assignments.length, 'Do you have an `SVGElement` class constructor?');
+    const node = svgelement_constructor_assignments.classVariable('node').at(0);
     assert(node.length, 'Are you setting `this.node`?');
 
     const create_element = svgelement_constructor.findCall('createElementNS');
@@ -48,7 +57,7 @@ describe('Module 01 - SVG Library', () => {
   });
 
   it('`SVGElement` class constructor should return `this`. @svgelement-constructor-return', () => {
-
+    assert(svgelement_constructor.length, 'Do you have an `SVGElement` class constructor?');
     const return_statement = svgelement_constructor.findReturn();
     const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
     assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
@@ -56,19 +65,17 @@ describe('Module 01 - SVG Library', () => {
 
   it('`SVGElement` class should have an `attr` method. @attr-method', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
-
-    const attr = svgelement.findMethod('attr');
+    assert(attr.length, 'Have you created an `attr` method in the `SVGElement` class?');
     const params = attr.findParams();
     assert(attr.length, 'Does the `SVGElement` class have a `attr` method?');
     assert(params.length != 0 && params[0].name == 'attrs', 'Does the `attr` method have a parameter of `attrs`?');
-
-    const for_of = attr.findForOf();
-    const for_of_left = for_of.length ? for_of.get().value.left : false;
-    const for_of_right = for_of.length ? for_of.get().value.right : false;
-    const for_of_body = for_of.length ? for_of.get().value.body.body[0].expression : false;
   });
 
   it('`SVGElement` class should have an `attr` method. @svgelement-attr', () => {
+    assert(for_of.length, 'Have you created a `for of` statment in the `attr` method?');
+    const for_of_left = for_of.length ? for_of.get().value.left : false;
+    const for_of_right = for_of.length ? for_of.get().value.right : false;
+    const for_of_body = for_of.length ? for_of.get().value.body.body[0].expression : false;
     assert(for_of_left &&
            for_of_left.declarations.length >= 1 &&
            for_of_left.declarations[0].id.type == 'ArrayPattern' &&
@@ -95,7 +102,7 @@ describe('Module 01 - SVG Library', () => {
   });
 
   it('`SVGElement` class `attr` method should `return` `this`. @svgelement-attr-return', () => {
-
+    assert(attr.length, 'Have you created an `attr` method in the `SVGElement` class?');
     const return_statement = attr.findReturn();
     const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
     assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
@@ -103,14 +110,13 @@ describe('Module 01 - SVG Library', () => {
   
   it('`SVGElement` class should have an `append` method. @svgelement-append', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
-
-    const append = svgelement.findMethod('append');
-    const params = append.findParams();
     assert(append.length, 'Does the `SVGElement` class have a `append` method?');
+    const params = append.findParams();
     assert(params.length != 0 && params[0].name == 'element', 'Does the `append` method have a parameter of `element`?');
   });
   
   it('`SVGElement` class `append` method should get parent. @svgelement-append-get-parent', () => {
+    assert(append.length, 'Does the `SVGElement` class have a `append` method?');
     const parent_const = append.findVariable('parent');
     const parent_declarator = parent_const.length ? parent_const.get().value.declarations[0] : false;
     assert(parent_declarator.id.name == 'parent', 'Do you have a constant named `parent`?');
@@ -135,6 +141,7 @@ describe('Module 01 - SVG Library', () => {
   });
   
   it('`SVGElement` class `append` method should `appendChild`. @svgelement-append-appendchild', () => {
+    assert(append.length, 'Does the `SVGElement` class have a `append` method?');
     const ac = append.findCall('appendChild');
     const ac_callee = ac.length ? ac.get().value.callee : false;
     const ac_arguments = ac.length ? ac.get().value.arguments[0] : false;
@@ -145,6 +152,7 @@ describe('Module 01 - SVG Library', () => {
   });
 
   it('`SVGElement` class `append` method should `return` `this`. @svgelement-append-return', () => {
+    assert(append.length, 'Does the `SVGElement` class have a `append` method?');
     const return_statement = append.findReturn();
     const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
     assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
@@ -156,19 +164,17 @@ describe('Module 01 - SVG Library', () => {
 
   it('`Sight` class should have a `constructor`. @sight-constructor', () => {
     assert(sight.length, 'Have you created the `Sight` class?');
-
-    const sight_constructor = sight.findMethod('constructor');
     assert(sight_constructor.length, 'Does the `Sight` class have a `constructor`?');
     const params = sight_constructor.findParams();
     assert(params.length && params[0].name == 'selector', 'Does the `Sight` class `constructor` have a parameter of `selector`?');
     assert(params.length && params[1].name == 'width', 'Does the `Sight` class `constructor` have a parameter of `width`?');
     assert(params.length && params[2].name == 'height', 'Does the `Sight` class `constructor` have a parameter of `height`?');
-
-    const svg_assignment = sight_constructor.findAssignment('svg', true);
-    assert(svg_assignment.length, 'Are you assigning the instance property `this.svg`?');
   });
 
   it('`Sight` class `constructor` should have create a `new` `SVGElement` instance. @sight-constructor-new', () => {
+    assert(sight_constructor.length, 'Does the `Sight` class have a `constructor`?');
+    const svg_assignment = sight_constructor.findAssignment('svg', true);
+    assert(svg_assignment.length, 'Are you assigning the instance property `this.svg`?');
     const svg_new_match = {
       'type': 'NewExpression',
       'callee.name': 'SVGElement',
@@ -194,8 +200,6 @@ describe('Module 01 - SVG Library', () => {
 
   it('`Sight` class should have a `draw` method. @sight-draw', () => {
     assert(sight.length, 'Have you created the `Sight` class?');
-
-    const draw = sight.findMethod('draw');
     assert(draw.length, 'Does the `Sight` class have a `draw` method?');
     const params = draw.findParams();
     assert(params.length && params[0].name == 'type', 'Does the `draw` method have a parameter of `type`?');
@@ -203,6 +207,7 @@ describe('Module 01 - SVG Library', () => {
   });
 
   it('`Sight` class `draw` method should `return` an `SVGElement`. @sight-draw-return', () => {
+    assert(draw.length, 'Does the `Sight` class have a `draw` method?');
     const draw_return = draw.findReturn();
     const return_new = draw_return.findNew();
     const return_new_match = {
