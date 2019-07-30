@@ -22,7 +22,9 @@ describe('Module 01 - SVG Library', () => {
     assert(svgelement_constructor.length, 'Does the `SVGElement` class have a `constructor`?');
     const params = svgelement_constructor.findParams();
     assert(params.length != 0 && params[0].name == 'type', 'Does the `SVGElement` class `constructor` have a parameter of `type`?');
+  });
 
+  it('`SVGElement` class should have a `constructor`. @svgelement-constructor-class-properties', () => {
     assert(svgelement_constructor_assignments.length, 'Do you have an `SVGElement` class constructor?');
     const type = svgelement_constructor_assignments.classVariable('type');
     const type_right = type.length ? type.get().parent.value.right.name : false;
@@ -54,24 +56,25 @@ describe('Module 01 - SVG Library', () => {
            create_element_right.arguments[1].object.type == 'ThisExpression' &&
            create_element_right.arguments[1].property.name == 'type', 'Are you passing `document.createElementNS()` the correct arguments?');
 
-  });
-
-  it('`SVGElement` class constructor should return `this`. @svgelement-constructor-return', () => {
     assert(svgelement_constructor.length, 'Do you have an `SVGElement` class constructor?');
     const return_statement = svgelement_constructor.findReturn();
     const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
     assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
   });
 
-  it('`SVGElement` class should have an `attr` method. @attr-method', () => {
+  it('`SVGElement` class should have an `attr` method. @svgelement-attr', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
     assert(attr.length, 'Have you created an `attr` method in the `SVGElement` class?');
+
     const params = attr.findParams();
-    assert(attr.length, 'Does the `SVGElement` class have a `attr` method?');
     assert(params.length != 0 && params[0].name == 'attrs', 'Does the `attr` method have a parameter of `attrs`?');
+
+    const return_statement = attr.findReturn();
+    const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
+    assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
   });
 
-  it('`SVGElement` class should have an `attr` method. @svgelement-attr', () => {
+  it('`SVGElement` class should have an `attr` method. @svgelement-attr-for', () => {
     assert(for_of.length, 'Have you created a `for of` statment in the `attr` method?');
     const for_of_left = for_of.length ? for_of.get().value.left : false;
     const for_of_right = for_of.length ? for_of.get().value.right : false;
@@ -99,13 +102,6 @@ describe('Module 01 - SVG Library', () => {
            for_of_body.arguments[0].value == null  &&
            for_of_body.arguments[1].name == 'key'  &&
            for_of_body.arguments[2].name == 'value', 'Does the `setAttributeNS()` function have the correct arguments?');
-  });
-
-  it('`SVGElement` class `attr` method should `return` `this`. @svgelement-attr-return', () => {
-    assert(attr.length, 'Have you created an `attr` method in the `SVGElement` class?');
-    const return_statement = attr.findReturn();
-    const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
-    assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
   });
   
   it('`SVGElement` class should have an `append` method. @svgelement-append', () => {
@@ -204,9 +200,7 @@ describe('Module 01 - SVG Library', () => {
     const params = draw.findParams();
     assert(params.length && params[0].name == 'type', 'Does the `draw` method have a parameter of `type`?');
     assert(params.length && params[1].name == 'attrs', 'Does the `draw` method have a parameter of `attrs`?');
-  });
 
-  it('`Sight` class `draw` method should `return` an `SVGElement`. @sight-draw-return', () => {
     assert(draw.length, 'Does the `Sight` class have a `draw` method?');
     const draw_return = draw.findReturn();
     const return_new = draw_return.findNew();
