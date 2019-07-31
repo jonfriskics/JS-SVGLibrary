@@ -21,7 +21,7 @@ describe('Module 01 - SVG Library', () => {
     assert(params.length != 0 && params[0].name == 'type', 'Does the `SVGElement` class `constructor` have a parameter of `type`?');
   });
 
-  it('`SVGElement` class should have a `constructor`. @svgelement-constructor-class-properties', () => {
+  it('`SVGElement` class should have `constructor` properties. @svgelement-constructor-class-properties', () => {
     assert(svgelement_constructor_assignments.length, 'Do you have an `SVGElement` class constructor?');
     const type = svgelement_constructor_assignments.classVariable('type');
     const type_right = type.length ? type.get().parent.value.right.name : false;
@@ -105,6 +105,10 @@ describe('Module 01 - SVG Library', () => {
     assert(append.length, 'Does the `SVGElement` class have a `append` method?');
     const params = append.findParams();
     assert(params.length != 0 && params[0].name == 'element', 'Does the `append` method have a parameter of `element`?');
+
+    const return_statement = append.findReturn();
+    const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
+    assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
   });
   
   it('`SVGElement` class `append` method should get parent. @svgelement-append-get-parent', () => {
@@ -143,13 +147,6 @@ describe('Module 01 - SVG Library', () => {
            ac_arguments.property.name === 'node', 'Are you appending `this.node` to `parent`?');
   });
 
-  it('`SVGElement` class `append` method should `return` `this`. @svgelement-append-return', () => {
-    assert(append.length, 'Does the `SVGElement` class have a `append` method?');
-    const return_statement = append.findReturn();
-    const return_right = return_statement.length ? return_statement.get().value.argument.type : false;
-    assert(return_right == 'ThisExpression', 'Does the `SVGElement` `constructor` `return this`?');
-  });
-
   it('Should have a `Sight` class. @sight-class', () => {
     assert(sight.length, 'Have you created the `Sight` class?');
   });
@@ -163,7 +160,7 @@ describe('Module 01 - SVG Library', () => {
     assert(params.length && params[2].name == 'height', 'Does the `Sight` class `constructor` have a parameter of `height`?');
   });
 
-  it('`Sight` class `constructor` should have create a `new` `SVGElement` instance. @sight-constructor-new', () => {
+  it('Should create a `new` `SVGElement` instance. @sight-constructor-new', () => {
     assert(sight_constructor.length, 'Does the `Sight` class have a `constructor`?');
     const svg_assignment = sight_constructor.findAssignment('svg', true);
     assert(svg_assignment.length, 'Are you assigning the instance property `this.svg`?');
@@ -223,4 +220,34 @@ describe('Module 01 - SVG Library', () => {
     assert(match(draw_return.findCall('append'), return_new_append_match), 'Are you chaining a call to `append` on `new SVGElement()`? Are you passing in `this.svg`?');
   });
 
+  it('Should create a `Sight` instance. @html-create-sight-instance', () => {
+    const sight_new = script_ast.findVariableDeclarator('svg');
+    assert(sight_new.length, 'Do you have a constant named `svg`?');
+    const sight_new_match = {
+      'id.name': 'svg',
+      'init.type': 'NewExpression',
+      'init.callee.name': 'Sight'
+    };
+    assert(match(sight_new, sight_new_match), 'Are you assigning the `svg` constant a new `Sight` instance?');
+
+    const sight_new_attr_match = {
+      'init.arguments.0.value': '.svg',
+      'init.arguments.1.value': 400,
+      'init.arguments.2.value': 400
+    };
+    assert(match(sight_new, sight_new_attr_match), 'Are you passing the `Sight` instance the correct arguments?');
+  });
+
+  it('Should use the `draw` method. @html-draw-method', () => {
+    const draw_call = script_ast.findCall('draw');
+    assert(draw_call.length, 'Have you called the `draw` method?');
+    const arguments = draw_call.get().value.arguments;
+    assert(arguments.length === 2, 'Are you passing the correct arguments to the `draw` method?');
+    assert(arguments[0].value === 'circle', 'Is the first argument `circle`?');
+    assert(arguments[1].properties.length === 3, 'Do you have 3 key value pairs in the object?');
+
+    const properties = {};
+    arguments[1].properties.map(property => { properties[property.key.name] = property.value.value; });
+    assert(_.isEqual(properties, { cx: 50, cy: 50, r: 50 }), '');
+  });
 });

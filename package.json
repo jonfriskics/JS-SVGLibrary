@@ -23,6 +23,7 @@
     "cross-env": "^5.2.0",
     "dot-object": "^1.8.1",
     "jscodeshift": "^0.6.4",
+    "lodash": "^4.17.15",
     "mocha": "^6.1.4"
   }
 }

@@ -4,6 +4,7 @@ const { assert } = require('chai');
 const cheerio = require('cheerio');
 const jscs = require('jscodeshift');
 const dot = require('dot-object');
+const _ = require('lodash');
 
 const source = fs.readFileSync(path.join(process.cwd(), 'js/sight.js'), 'utf8');
 const ast = jscs(source);
@@ -23,7 +24,10 @@ jscs.registerMethods({
   },
   findNew: function() {
     return this.find(jscs.NewExpression);
-  }
+  },
+  findVariableDeclarator: function(name) {
+    return this.find(jscs.VariableDeclarator).filter(path => (path.value.id.name === name));
+  },
 });
 
 jscs.registerMethods({
@@ -73,14 +77,17 @@ jscs.registerMethods({
 
 const source_html = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
 const $ = cheerio.load(source_html);
+const script_ast = jscs($('script')[1].children[0].data);
 
 const match = (obj, match_obj) => jscs.match(obj.get().value, dot.object(match_obj));
 
+
 Object.assign(global, {
-  $,
+  _,
   assert,
   ast,
   dot,
   jscs,
-  match
+  match,
+  script_ast
 });
