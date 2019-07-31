@@ -5,12 +5,9 @@ describe('Module 01 - SVG Library', () => {
   const svgelement_constructor = (svgelement.length) ? svgelement.findMethod('constructor') : [];
   const sight_constructor = (sight.length) ? svgelement.findMethod('constructor') : [];
   const svgelement_constructor_assignments = (svgelement_constructor.length) ? svgelement_constructor.findAssignments() : [];
-
   const attr = (svgelement.length) ? svgelement.findMethod('attr') : [];
   const for_of = (attr.length) ? attr.findForOf() : [];
-
   const append = (svgelement.length) ? svgelement.findMethod('append') : [];
-
   const draw = (sight.length) ? sight.findMethod('draw') : [];
 
   it('Should have a `SVGElement` class. @svgelement-class', () => {
@@ -44,8 +41,7 @@ describe('Module 01 - SVG Library', () => {
     const create_element_left = create_element.length ? create_element.get().parent.value.left : false;
     const create_element_right = create_element.length ? create_element.get().parent.value.right : false;
 
-    assert(create_element_left &&
-           create_element_right &&
+    assert(create_element_left && create_element_right &&
            create_element_left.object.type == 'ThisExpression' && 
            create_element_left.property.name == 'node' && 
            create_element_right.callee.object.name == 'document', 'Are you assigning `this.node` a call to `document.createElementNS()`?');
@@ -65,7 +61,7 @@ describe('Module 01 - SVG Library', () => {
   it('`SVGElement` class should have an `attr` method. @svgelement-attr', () => {
     assert(svgelement.length, 'Have you created the `SVGElement` class?');
     assert(attr.length, 'Have you created an `attr` method in the `SVGElement` class?');
-
+    
     const params = attr.findParams();
     assert(params.length != 0 && params[0].name == 'attrs', 'Does the `attr` method have a parameter of `attrs`?');
 
