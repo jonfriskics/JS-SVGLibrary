@@ -32,7 +32,7 @@ describe('Module 01 - SVG Library', () => {
     assert(namespace_right == 'http://www.w3.org/2000/svg', 'Have you set `this.namespace` equal to `http://www.w3.org/2000/svg`?');
   });
 
-  it('`SVGElement` class should create an NS element. @svgelement-constructor-createnselement', () => {
+  it('`SVGElement` class should create an NS element. @svgelement-constructor-createelementns', () => {
     assert(svgelement_constructor_assignments.length, 'Do you have an `SVGElement` class constructor?');
     const node = svgelement_constructor_assignments.classVariable('node').at(0);
     assert(node.length, 'Are you setting `this.node`?');
@@ -81,20 +81,17 @@ describe('Module 01 - SVG Library', () => {
            for_of_left.declarations[0].id.elements[0].name == 'key' &&
            for_of_left.declarations[0].id.elements[1].name == 'value', 'Have you defined an array with `key` and `value` in the first part of the for loop?');
 
-    assert(for_of_right &&
-           for_of_right.type == 'CallExpression' &&
+    assert(for_of_right && for_of_right.type == 'CallExpression' &&
            for_of_right.callee.object.name == 'Object' &&
            for_of_right.callee.property.name == 'entries' &&
            for_of_right.arguments.length >= 1 &&
            for_of_right.arguments[0].name == 'attrs', 'Have you called the `Objects.entries()` function with the correct arguments?');
 
-    assert(for_of_body &&
-           for_of_body.callee.object.object.type == 'ThisExpression' &&
+    assert(for_of_body && for_of_body.callee.object.object.type == 'ThisExpression' &&
            for_of_body.callee.object.property.name == 'node' &&
            for_of_body.callee.property.name == 'setAttributeNS', 'In the body of the `for` loop do you have a call to `setAttributeNS()`?');
 
-    assert(for_of_body &&
-           for_of_body.arguments.length >= 1 &&
+    assert(for_of_body && for_of_body.arguments.length >= 1 &&
            for_of_body.arguments[0].value == null  &&
            for_of_body.arguments[1].name == 'key'  &&
            for_of_body.arguments[2].name == 'value', 'Does the `setAttributeNS()` function have the correct arguments?');
