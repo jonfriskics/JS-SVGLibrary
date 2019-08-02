@@ -245,6 +245,7 @@ describe('Module 01 - SVG Library', () => {
 
     const properties = {};
     arguments[1].properties.map(property => { properties[property.key.name] = property.value.value; });
-    assert(_.isEqual(properties, { cx: 50, cy: 50, r: 50 }), '');
+    const matched = JSON.stringify(properties) === JSON.stringify({ cx: 50, cy: 50, r: 50 })
+    assert(matched, 'Are you passing an object with the correct attributes?');
   });
 });

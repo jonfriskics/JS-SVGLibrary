@@ -4,7 +4,6 @@ const { assert } = require('chai');
 const cheerio = require('cheerio');
 const jscs = require('jscodeshift');
 const dot = require('dot-object');
-const _ = require('lodash');
 
 const source = fs.readFileSync(path.join(process.cwd(), 'js/sight.js'), 'utf8');
 const ast = jscs(source);
@@ -83,7 +82,6 @@ const match = (obj, match_obj) => jscs.match(obj.get().value, dot.object(match_o
 
 
 Object.assign(global, {
-  _,
   assert,
   ast,
   dot,
