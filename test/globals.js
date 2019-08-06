@@ -16,7 +16,13 @@ jscs.registerMethods({
     return this.find(jscs.ConditionalExpression);
   },
   findCall: function(name) {
-    return this.find(jscs.CallExpression).filter(path => (path.value.callee.property.name === name));
+    return this.find(jscs.CallExpression).filter(path => {
+        if (path.value.callee.property && path.value.callee.property.name === name) {
+          return true;
+        } else {
+          return false;
+        }
+    });
   },
   findCalls: function() {
     return this.find(jscs.CallExpression);
